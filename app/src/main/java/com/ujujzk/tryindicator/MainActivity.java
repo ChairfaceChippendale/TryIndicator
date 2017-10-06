@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public
         int getCount() {
-            return 10;
+            return 15;
         }
 
         @SuppressLint("SetTextI18n")

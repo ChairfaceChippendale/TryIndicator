@@ -116,9 +116,13 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
 
                 if (mSelectedIndex < DOTE_COUNT - 1) {
 
-                    final ImageView unselectedView = mIndexImages.get(mSelectedIndex - 1);
-                    unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-                    unselectedView.setImageResource(R.drawable.white_circle);
+                    if (mSelectedIndex == 1 && selectedIndex > 1) {
+
+                    } else {
+                        final ImageView unselectedView = mIndexImages.get(mSelectedIndex - 1);
+                        unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
+                        unselectedView.setImageResource(R.drawable.white_circle);
+                    }
 
                     final ImageView selectedView = mIndexImages.get(mSelectedIndex);
                     selectedView.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
@@ -154,13 +158,18 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
                 if (mSelectedIndex == 0) {
 
                     final ImageView lastImage = mIndexImages.get(DOTE_COUNT - 1);
+                    lastImage.setImageResource(R.drawable.white_circle);
                     lastImage.animate().scaleX(EDGE_SCALE).scaleY(EDGE_SCALE).setDuration(300).start();
 
                 } else if (mSelectedIndex > 0) {
 
-                    final ImageView unselectedView = mIndexImages.get(mSelectedIndex + 1);
-                    unselectedView.setImageResource(R.drawable.white_circle);
-                    unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
+                    if (mSelectedIndex == DOTE_COUNT - 2 && selectedIndex < mPageCount-2) {
+
+                    } else {
+                        final ImageView unselectedView = mIndexImages.get(mSelectedIndex + 1);
+                        unselectedView.setImageResource(R.drawable.white_circle);
+                        unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
+                    }
 
                     final ImageView selectedView = mIndexImages.get(mSelectedIndex);
                     selectedView.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
