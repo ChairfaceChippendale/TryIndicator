@@ -27,6 +27,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
     private var mPageCount: Int = 0
     private var mSelectedIndex: Int = 0
     private var oldPageIndex: Int = 0
+    private var oldDoteIndex: Int = 0
     private var doteIndex: Int = 0
     private var mItemSize = DEF_VALUE
     private var mDelimiterSize = DEF_VALUE
@@ -181,10 +182,10 @@ class InfinitePagerIndicator : LinearLayoutCompat {
             } else if (doteIndex == 1 && !goRight) {
 
 
-                if  (pageIndex == 2) {
-                    secondLeft()
+                if  (doteIndex == oldDoteIndex) {
+                    secondLeftWithShift()
                 } else {
-                secondLeftWithShift()
+                    secondLeft()
                 }
 
 
@@ -194,10 +195,10 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 thirdLeft()
             } else if (doteIndex == 3 && goRight) {
 
-                if (pageIndex == 3) {
-                    forthRight()
-                } else {
+                if (oldDoteIndex == doteIndex) {
                     forthRightWithShift()
+                } else {
+                    forthRight()
                 }
 
             } else if (doteIndex == 3 && !goRight) {
@@ -212,12 +213,11 @@ class InfinitePagerIndicator : LinearLayoutCompat {
 
         }
 
-
-        oldPageIndex = pageIndex;
-
+        oldPageIndex = pageIndex
+        oldDoteIndex = doteIndex
     }
 
-    private val STEP = 40f
+    private val STEP = 45f
     private val DURATION = 300L
 
     private fun firstLeft() {
@@ -300,6 +300,62 @@ class InfinitePagerIndicator : LinearLayoutCompat {
         }
     }
 
+    private fun secondLeftWithShift () {
+        val d0 = mIndexImages[0]
+        val d1 = mIndexImages[1]
+        val d2 = mIndexImages[2]
+        val d3 = mIndexImages[3]
+        val d4 = mIndexImages[4]
+
+        ValueAnimator.ofFloat(0F, STEP).apply {
+            duration = DURATION
+            addUpdateListener {
+                val value = it.animatedValue as Float
+
+                d4.translationX = value
+                d4.scaleX = value / STEP
+                d4.scaleY = value / STEP
+
+                d3.translationX = value
+                d3.scaleX = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
+                d3.scaleY = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
+
+                d2.translationX = value
+
+                d1.setImageResource(R.drawable.white_circle)
+                d1.translationX = value
+                d1.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d1.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+
+                d0.translationX = value
+                d0.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d0.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+
+                if (value == STEP) {
+                    d4.scaleX = EDGE_SCALE
+                    d4.scaleY = EDGE_SCALE
+                    d4.translationX = 0f
+
+                    d3.translationX = 0f
+                    d3.scaleX = COMMON_SCALE
+                    d3.scaleY = COMMON_SCALE
+
+                    d2.translationX = 0f
+
+                    d1.translationX = 0f
+                    d1.scaleX = SELECTED_SCALE
+                    d1.scaleY = SELECTED_SCALE
+                    d1.setImageResource(R.drawable.blue_circle)
+
+                    d0.translationX = 0f
+                    d0.scaleX = EDGE_SCALE
+                    d0.scaleY = EDGE_SCALE
+                }
+            }
+            start()
+        }
+    }
+
     private fun thirdRight() {
         val d1 = mIndexImages[1]
         val d2 = mIndexImages[2]
@@ -376,49 +432,6 @@ class InfinitePagerIndicator : LinearLayoutCompat {
         }
     }
 
-    private fun forthLeft() {
-        val d3 = mIndexImages[3]
-        val d4 = mIndexImages[4]
-
-        ValueAnimator.ofFloat(0f, STEP).apply {
-            duration = DURATION
-            addUpdateListener {
-                val value = it.animatedValue as Float
-
-                d4.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d4.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d4.setImageResource(R.drawable.white_circle)
-
-                d3.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.setImageResource(R.drawable.blue_circle)
-            }
-            start()
-        }
-    }
-
-    private fun fifthRight() {
-        val d3 = mIndexImages[3]
-        val d4 = mIndexImages[4]
-
-        ValueAnimator.ofFloat(0f, STEP).apply {
-            duration = DURATION
-            addUpdateListener {
-                val value = it.animatedValue as Float
-
-                d3.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.setImageResource(R.drawable.white_circle)
-
-                d4.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
-                d4.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
-                d4.setImageResource(R.drawable.blue_circle)
-
-            }
-            start()
-        }
-    }
-
     private fun forthRightWithShift() {
         val d0 = mIndexImages[0]
         val d1 = mIndexImages[1]
@@ -475,61 +488,52 @@ class InfinitePagerIndicator : LinearLayoutCompat {
         }
     }
 
-    private fun secondLeftWithShift () {
-        val d0 = mIndexImages[0]
-        val d1 = mIndexImages[1]
-        val d2 = mIndexImages[2]
+    private fun forthLeft() {
         val d3 = mIndexImages[3]
         val d4 = mIndexImages[4]
 
-        ValueAnimator.ofFloat(0F, STEP).apply {
+        ValueAnimator.ofFloat(0f, STEP).apply {
             duration = DURATION
             addUpdateListener {
                 val value = it.animatedValue as Float
 
-                d4.translationX = value
-                d4.scaleX = value / STEP
-                d4.scaleY = value / STEP
+                d4.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d4.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d4.setImageResource(R.drawable.white_circle)
 
-                d3.translationX = value
-                d3.scaleX = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
-                d3.scaleY = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
-
-                d2.translationX = value
-
-                d1.setImageResource(R.drawable.white_circle)
-                d1.translationX = value
-                d1.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d1.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-
-                d0.translationX = value
-                d0.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
-                d0.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
-
-                if (value == STEP) {
-                    d4.scaleX = EDGE_SCALE
-                    d4.scaleY = EDGE_SCALE
-                    d4.translationX = 0f
-
-                    d3.translationX = 0f
-                    d3.scaleX = COMMON_SCALE
-                    d3.scaleY = COMMON_SCALE
-
-                    d2.translationX = 0f
-
-                    d1.translationX = 0f
-                    d1.scaleX = SELECTED_SCALE
-                    d1.scaleY = SELECTED_SCALE
-                    d1.setImageResource(R.drawable.blue_circle)
-
-                    d0.translationX = 0f
-                    d0.scaleX = EDGE_SCALE
-                    d0.scaleY = EDGE_SCALE
-                }
+                d3.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.setImageResource(R.drawable.blue_circle)
             }
             start()
         }
     }
+
+    private fun fifthRight() {
+        val d3 = mIndexImages[3]
+        val d4 = mIndexImages[4]
+
+        ValueAnimator.ofFloat(0f, STEP).apply {
+            duration = DURATION
+            addUpdateListener {
+                val value = it.animatedValue as Float
+
+                d3.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.setImageResource(R.drawable.white_circle)
+
+                d4.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d4.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d4.setImageResource(R.drawable.blue_circle)
+
+            }
+            start()
+        }
+    }
+
+
+
+
 
 
     fun addOnPageChangeListener(listener: ViewPager.OnPageChangeListener) {
