@@ -76,8 +76,52 @@ class InfinitePagerIndicator : LinearLayoutCompat {
     fun setupWithViewPager(viewPager: ViewPager) {
         setPageCount(viewPager.adapter.count)
         viewPager.addOnPageChangeListener(OnPageChangeListener())
-//        viewPager.currentItem
-        setSelectedIndex(viewPager.currentItem)
+
+        if (viewPager.adapter.count > DOTE_COUNT) {
+
+            val currentIndex = viewPager.currentItem
+
+            oldPageIndex = if (currentIndex > 0) currentIndex - 1 else 0
+
+
+
+            (0..3).forEach {
+                mIndexImages[it].scale(COMMON_SCALE)
+            }
+            mIndexImages[4].scale(EDGE_SCALE)
+
+            when (currentIndex) {
+                0 -> {
+                    doteIndex = 0
+                    oldDoteIndex = 0
+                    mIndexImages[0].scale(SELECTED_SCALE)
+                    mIndexImages[0].setImageResource(R.drawable.blue_circle)
+                }
+                in 1..3 -> {
+                    doteIndex = currentIndex
+                    oldDoteIndex = currentIndex
+                    mIndexImages[currentIndex].scale(SELECTED_SCALE)
+                    mIndexImages[currentIndex].setImageResource(R.drawable.blue_circle)
+                }
+                viewPager.adapter.count - 1 -> {
+                    oldDoteIndex = 4
+                    doteIndex = 4
+                    mIndexImages[0].scale(EDGE_SCALE)
+                    mIndexImages[4].scale(SELECTED_SCALE)
+                    mIndexImages[4].setImageResource(R.drawable.blue_circle)
+                }
+                else -> {
+                    oldDoteIndex = 3
+                    doteIndex = 3
+                    mIndexImages[0].scale(EDGE_SCALE)
+                    mIndexImages[3].scale(SELECTED_SCALE)
+                    mIndexImages[3].setImageResource(R.drawable.blue_circle)
+                }
+            }
+        } else {
+            setSelectedIndex(viewPager.currentItem)
+        }
+
     }
 
     private fun setPageCount(count: Int) {
@@ -95,7 +139,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 addView(createBoxedItem(it))
             }
         }
-        setSelectedIndex(mSelectedIndex)
+//        setSelectedIndex(mSelectedIndex)
     }
 
 
@@ -443,45 +487,37 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 val value = it.animatedValue as Float
 
                 d0.translationX = -value
-                d0.scaleX = EDGE_SCALE - (EDGE_SCALE) * value / STEP
-                d0.scaleY = EDGE_SCALE - (EDGE_SCALE) * value / STEP
+                d0.scale(EDGE_SCALE - (EDGE_SCALE) * value / STEP)
 
                 d1.translationX = -value
-                d1.scaleX = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
-                d1.scaleY = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
+                d1.scale(COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP)
 
                 d2.translationX = -value
 
                 d3.setImageResource(R.drawable.white_circle)
                 d3.translationX = -value
-                d3.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.scale(SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP)
 
                 d4.translationX = -value
-                d4.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
-                d4.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d4.scale(EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP)
                 d4.setImageResource(R.drawable.blue_circle)
 
                 if (value == STEP) {
-                    d0.scaleX = EDGE_SCALE
-                    d0.scaleY = EDGE_SCALE
+                    d0.scale(EDGE_SCALE)
                     d0.translationX = 0f
 
                     d1.translationX = 0f
-                    d1.scaleX = COMMON_SCALE
-                    d1.scaleY = COMMON_SCALE
+                    d1.scale(COMMON_SCALE)
 
                     d2.translationX = 0f
 
                     d3.translationX = 0f
-                    d3.scaleX = SELECTED_SCALE
-                    d3.scaleY = SELECTED_SCALE
+                    d3.scale(SELECTED_SCALE)
                     d3.setImageResource(R.drawable.blue_circle)
 
                     d4.setImageResource(R.drawable.white_circle)
                     d4.translationX = 0f
-                    d4.scaleX = EDGE_SCALE
-                    d4.scaleY = EDGE_SCALE
+                    d4.scale(EDGE_SCALE)
                 }
             }
             start()
