@@ -217,7 +217,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
         oldDoteIndex = doteIndex
     }
 
-    private val STEP = 45f
+    private val STEP = 26f
     private val DURATION = 300L
 
     private fun firstLeft() {
@@ -313,8 +313,8 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 val value = it.animatedValue as Float
 
                 d4.translationX = value
-                d4.scaleX = value / STEP
-                d4.scaleY = value / STEP
+                d4.scaleX = EDGE_SCALE - (EDGE_SCALE) * value / STEP
+                d4.scaleY = EDGE_SCALE - (EDGE_SCALE) * value / STEP
 
                 d3.translationX = value
                 d3.scaleX = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
@@ -324,12 +324,13 @@ class InfinitePagerIndicator : LinearLayoutCompat {
 
                 d1.setImageResource(R.drawable.white_circle)
                 d1.translationX = value
-                d1.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d1.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d1.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d1.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
 
                 d0.translationX = value
                 d0.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
                 d0.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d0.setImageResource(R.drawable.blue_circle)
 
                 if (value == STEP) {
                     d4.scaleX = EDGE_SCALE
@@ -347,6 +348,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                     d1.scaleY = SELECTED_SCALE
                     d1.setImageResource(R.drawable.blue_circle)
 
+                    d0.setImageResource(R.drawable.white_circle)
                     d0.translationX = 0f
                     d0.scaleX = EDGE_SCALE
                     d0.scaleY = EDGE_SCALE
@@ -445,8 +447,8 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 val value = it.animatedValue as Float
 
                 d0.translationX = -value
-                d0.scaleX = value / STEP
-                d0.scaleY = value / STEP
+                d0.scaleX = EDGE_SCALE - (EDGE_SCALE) * value / STEP
+                d0.scaleY = EDGE_SCALE - (EDGE_SCALE) * value / STEP
 
                 d1.translationX = -value
                 d1.scaleX = COMMON_SCALE - (COMMON_SCALE - EDGE_SCALE) * value / STEP
@@ -456,12 +458,13 @@ class InfinitePagerIndicator : LinearLayoutCompat {
 
                 d3.setImageResource(R.drawable.white_circle)
                 d3.translationX = -value
-                d3.scaleX = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
-                d3.scaleY = COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.scaleX = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
+                d3.scaleY = SELECTED_SCALE - (SELECTED_SCALE - COMMON_SCALE) * value / STEP
 
                 d4.translationX = -value
                 d4.scaleX = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
                 d4.scaleY = EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value / STEP
+                d4.setImageResource(R.drawable.blue_circle)
 
                 if (value == STEP) {
                     d0.scaleX = EDGE_SCALE
@@ -479,6 +482,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                     d3.scaleY = SELECTED_SCALE
                     d3.setImageResource(R.drawable.blue_circle)
 
+                    d4.setImageResource(R.drawable.white_circle)
                     d4.translationX = 0f
                     d4.scaleX = EDGE_SCALE
                     d4.scaleY = EDGE_SCALE
