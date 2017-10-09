@@ -76,7 +76,8 @@ class InfinitePagerIndicator : LinearLayoutCompat {
     fun setupWithViewPager(viewPager: ViewPager) {
         setPageCount(viewPager.adapter.count)
         viewPager.addOnPageChangeListener(OnPageChangeListener())
-
+//        viewPager.currentItem
+        setSelectedIndex(viewPager.currentItem)
     }
 
     private fun setPageCount(count: Int) {

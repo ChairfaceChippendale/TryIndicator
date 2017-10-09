@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
         mViewPager.setAdapter(new MyPagerAdapter());
+        mViewPager.setCurrentItem(0,false);
+
         mViewPagerIndicator.setupWithViewPager(mViewPager);
         mViewPagerIndicator.addOnPageChangeListener(mOnPageChangeListener);
     }
