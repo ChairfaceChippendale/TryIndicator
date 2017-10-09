@@ -1,7 +1,10 @@
 package com.ujujzk.tryindicator;
 
+
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -29,7 +32,7 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
     private static final int COMMON_SCALE = 1;
     private static final int DEF_VALUE = 10;
 
-    private static final int DOTE_COUNT = 6;
+    private static final int DOTE_COUNT = 5;
 
     private int mPageCount;
     private int mSelectedIndex;
@@ -42,12 +45,23 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
     @Nullable
     private ViewPager.OnPageChangeListener mListener;
 
+
+
+
     public ViewPagerIndicator(@NonNull final Context context) {
         this(context, null);
+        setClipChildren(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setClipToOutline(false);
+        }
     }
 
     public ViewPagerIndicator(@NonNull final Context context, @Nullable final AttributeSet attrs) {
         this(context, attrs, 0);
+        setClipChildren(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setClipToOutline(false);
+        }
     }
 
     public ViewPagerIndicator(@NonNull final Context context, @Nullable final AttributeSet attrs, final int defStyleAttr) {
@@ -63,10 +77,16 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
         if (isInEditMode()) {
             createEditModeLayout();
         }
+        setClipChildren(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setClipToOutline(false);
+        }
     }
 
+
+
     private void createEditModeLayout() {
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < DOTE_COUNT; ++i) {
             final FrameLayout boxedItem = createBoxedItem(i);
             addView(boxedItem);
             if (i == 1) {
@@ -108,99 +128,72 @@ public class ViewPagerIndicator extends LinearLayoutCompat {
         } else { //more
 
 
-            if (selectedIndex > mOldIndex) { //increase
 
-                if (mSelectedIndex < DOTE_COUNT - 1) {
-                    mSelectedIndex++;
-                }
+            final int step = 40;
 
-                if (mSelectedIndex < DOTE_COUNT - 1) {
+            final ImageView d0 = mIndexImages.get(0);
+            final ImageView d1 = mIndexImages.get(1);
+            final ImageView d2 = mIndexImages.get(2);
+            final ImageView d3 = mIndexImages.get(3);
+            final ImageView d4 = mIndexImages.get(4);
 
-                    if (mSelectedIndex == 1 && selectedIndex > 1) {
 
-                    } else {
-                        final ImageView unselectedView = mIndexImages.get(mSelectedIndex - 1);
-                        unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-                        unselectedView.setImageResource(R.drawable.white_circle);
+            ValueAnimator d0an = ValueAnimator.ofFloat(0,(float)step);
+            d0an.setDuration(150);
+            d0an.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    float value = (float) valueAnimator.getAnimatedValue();
+
+
+                    d0.setTranslationX(-value);
+                    d0.setScaleX( value/step);
+                    d0.setScaleY( value/step);
+
+
+                    d1.setTranslationX(-value);
+                    d1.setScaleX(COMMON_SCALE - (COMMON_SCALE-EDGE_SCALE)*value/step);
+                    d1.setScaleY(COMMON_SCALE - (COMMON_SCALE-EDGE_SCALE)*value/step);
+
+
+                    d2.setTranslationX(-value);
+
+                    d3.setTranslationX(-value);
+                    d3.setScaleX(COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value/step);
+                    d3.setScaleY(COMMON_SCALE + (SELECTED_SCALE - COMMON_SCALE) * value/step);
+
+                    d4.setTranslationX(-value);
+                    d4.setScaleX(EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value/step);
+                    d4.setScaleY(EDGE_SCALE + (SELECTED_SCALE - EDGE_SCALE) * value/step);
+
+                    if (value == step) {
+                        d0.setScaleX(EDGE_SCALE);
+                        d0.setScaleY(EDGE_SCALE);
+                        d0.setTranslationX(0);
+
+                        d1.setTranslationX(0);
+                        d1.setScaleX(COMMON_SCALE);
+                        d1.setScaleY(COMMON_SCALE);
+
+                        d2.setTranslationX(0);
+
+                        d3.setTranslationX(0);
+                        d3.setScaleX(SELECTED_SCALE);
+                        d3.setScaleY(SELECTED_SCALE);
+                        d3.setImageResource(R.drawable.blue_circle);
+
+                        d4.setTranslationX(0);
+                        d4.setScaleX(EDGE_SCALE);
+                        d4.setScaleY(EDGE_SCALE);
                     }
-
-                    final ImageView selectedView = mIndexImages.get(mSelectedIndex);
-                    selectedView.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
-                    selectedView.setImageResource(R.drawable.blue_circle);
-
-                } else if (mSelectedIndex == DOTE_COUNT - 1) {
-
-                    final ImageView firstImage = mIndexImages.get(0);
-                    firstImage.animate().scaleX(EDGE_SCALE).scaleY(EDGE_SCALE).setDuration(300).start();
-
                 }
-                if (selectedIndex == mPageCount - 1) {
-
-                    final ImageView last = mIndexImages.get(DOTE_COUNT - 1);
-                    last.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
-                    last.setImageResource(R.drawable.blue_circle);
-
-                    final ImageView preLast = mIndexImages.get(DOTE_COUNT - 2);
-                    preLast.setImageResource(R.drawable.white_circle);
-                    preLast.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-
-                } else if (selectedIndex == mPageCount - 2) {
-                    final ImageView last = mIndexImages.get(DOTE_COUNT - 1);
-                    last.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-                }
-
-            } else { //decrease
-
-                if (mSelectedIndex > 0) {
-                    mSelectedIndex--;
-                }
-
-                if (mSelectedIndex == 0) {
-
-                    final ImageView lastImage = mIndexImages.get(DOTE_COUNT - 1);
-                    lastImage.setImageResource(R.drawable.white_circle);
-                    lastImage.animate().scaleX(EDGE_SCALE).scaleY(EDGE_SCALE).setDuration(300).start();
-
-                } else if (mSelectedIndex > 0) {
-
-                    if (mSelectedIndex == DOTE_COUNT - 2 && selectedIndex < mPageCount-2) {
-
-                    } else {
-                        final ImageView unselectedView = mIndexImages.get(mSelectedIndex + 1);
-                        unselectedView.setImageResource(R.drawable.white_circle);
-                        unselectedView.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-                    }
-
-                    final ImageView selectedView = mIndexImages.get(mSelectedIndex);
-                    selectedView.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
-                    selectedView.setImageResource(R.drawable.blue_circle);
-
-                }
-
-                if (selectedIndex == 0) {
-
-                    final ImageView first = mIndexImages.get(0);
-                    first.animate().scaleX(SELECTED_SCALE).scaleY(SELECTED_SCALE).setDuration(300).start();
-                    first.setImageResource(R.drawable.blue_circle);
-
-                    final ImageView second = mIndexImages.get(1);
-                    second.setImageResource(R.drawable.white_circle);
-                    second.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-
-                } else if (selectedIndex == 1) {
-                    final ImageView first = mIndexImages.get(0);
-                    first.animate().scaleX(COMMON_SCALE).scaleY(COMMON_SCALE).setDuration(300).start();
-                }
-
-
-            }
-
-            mOldIndex = selectedIndex;
-
+            });
+            d0an.start();
         }
-
-
     }
+
+
+
 
 
     private void setPageCount(final int pageCount) {

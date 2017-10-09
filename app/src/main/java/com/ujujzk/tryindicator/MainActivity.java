@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPagerIndicator mViewPagerIndicator;
+    private InfinitePagerIndicator mViewPagerIndicator;
     private ViewPager mViewPager;
 
     @Override
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.view_pager_indicator);
+        mViewPagerIndicator = (InfinitePagerIndicator) findViewById(R.id.view_pager_indicator);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
         mViewPager.setAdapter(new MyPagerAdapter());
