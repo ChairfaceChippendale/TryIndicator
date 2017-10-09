@@ -148,16 +148,16 @@ class InfinitePagerIndicator : LinearLayoutCompat {
             return
         }
 
-        var goRight = oldPageIndex < pageIndex;
+        val goRight = oldPageIndex < pageIndex
 
 
-        if  (pageIndex == 0) {
+        if (pageIndex == 0) {
             doteIndex = 0
         } else if (pageIndex == mPageCount - 1) {
             doteIndex = 4
         } else if (goRight && doteIndex < 3) {
             doteIndex++
-        } else if (!goRight && doteIndex > 1){
+        } else if (!goRight && doteIndex > 1) {
             doteIndex--
         }
 
@@ -181,13 +181,11 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 secondRight()
             } else if (doteIndex == 1 && !goRight) {
 
-
-                if  (doteIndex == oldDoteIndex) {
+                if (doteIndex == oldDoteIndex) {
                     secondLeftWithShift()
                 } else {
                     secondLeft()
                 }
-
 
             } else if (doteIndex == 2 && goRight) {
                 thirdRight()
@@ -207,18 +205,15 @@ class InfinitePagerIndicator : LinearLayoutCompat {
                 fifthRight()
             } else {
 
-
             }
-
-
         }
 
         oldPageIndex = pageIndex
         oldDoteIndex = doteIndex
     }
 
-    private val STEP = 26f
-    private val DURATION = 300L
+    private val STEP: Float = 26f
+    private val DURATION: Long = 300L
 
     private fun firstLeft() {
         val d0 = mIndexImages[0]
@@ -300,7 +295,7 @@ class InfinitePagerIndicator : LinearLayoutCompat {
         }
     }
 
-    private fun secondLeftWithShift () {
+    private fun secondLeftWithShift() {
         val d0 = mIndexImages[0]
         val d1 = mIndexImages[1]
         val d2 = mIndexImages[2]
@@ -534,10 +529,6 @@ class InfinitePagerIndicator : LinearLayoutCompat {
             start()
         }
     }
-
-
-
-
 
 
     fun addOnPageChangeListener(listener: ViewPager.OnPageChangeListener) {
